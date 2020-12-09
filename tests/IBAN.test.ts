@@ -1,5 +1,5 @@
 import { Kind } from 'graphql/language';
-import { GraphQLIBAN } from '../src/scalars/IBAN';
+import IBAN from '../src/resolvers/IBAN';
 
 // List was taken from https://www.iban.com/structure
 const IBANs = [
@@ -85,26 +85,23 @@ describe(`IBAN`, () => {
   describe(`valid`, () => {
     it(`serialize`, () => {
       for (const value of IBANs) {
-        expect(GraphQLIBAN.serialize(value)).toEqual(value);
+        expect(IBAN.serialize(value)).toEqual(value);
       }
     });
 
     it(`parseValue`, () => {
       for (const value of IBANs) {
-        expect(GraphQLIBAN.parseValue(value)).toEqual(value);
+        expect(IBAN.parseValue(value)).toEqual(value);
       }
     });
 
     it(`parseLiteral`, () => {
       for (const value of IBANs) {
         expect(
-          GraphQLIBAN.parseLiteral(
-            {
-              value,
-              kind: Kind.STRING,
-            },
-            {},
-          ),
+          IBAN.parseLiteral({
+            value,
+            kind: Kind.STRING,
+          }, {}),
         ).toEqual(value);
       }
     });
@@ -113,30 +110,21 @@ describe(`IBAN`, () => {
   describe(`invalid`, () => {
     describe(`not a valid IBAN`, () => {
       it(`serialize`, () => {
-        expect(() => GraphQLIBAN.serialize(123)).toThrow(/Value is not string/);
-        expect(() => GraphQLIBAN.serialize(`this is not an IBAN`)).toThrow(
-          /Value is not a valid IBAN/,
-        );
+        expect(() => IBAN.serialize(123)).toThrow(/Value is not string/);
+        expect(() => IBAN.serialize(`this is not an IBAN`)).toThrow(/Value is not a valid IBAN/);
       });
 
       it(`parseValue`, () => {
-        expect(() => GraphQLIBAN.serialize(123)).toThrow(/Value is not string/);
-        expect(() => GraphQLIBAN.parseValue(`this is not an IBAN`)).toThrow(
-          /Value is not a valid/,
-        );
+        expect(() => IBAN.serialize(123)).toThrow(/Value is not string/);
+        expect(() => IBAN.parseValue(`this is not an IBAN`)).toThrow(/Value is not a valid/);
       });
 
       it(`parseLiteral`, () => {
-        expect(() =>
-          GraphQLIBAN.parseLiteral({ value: 123, kind: Kind.INT } as any, {}),
-        ).toThrow(/Can only validate strings as IBANs but got a/);
+        expect(() => IBAN.parseLiteral({ value: 123, kind: Kind.INT } as any, {}))
+          .toThrow(/Can only validate strings as IBANs but got a/);
 
-        expect(() =>
-          GraphQLIBAN.parseLiteral(
-            { value: `this is not an IBAN number`, kind: Kind.STRING },
-            {},
-          ),
-        ).toThrow(/Value is not a valid IBAN/);
+        expect(() => IBAN.parseLiteral({ value: `this is not an IBAN number`, kind: Kind.STRING }, {}))
+          .toThrow(/Value is not a valid IBAN/);
       });
     });
   });

@@ -1,4 +1,4 @@
-const { resolve } = require('path');
+const path = require('path');
 
 module.exports = {
   mode: 'production',
@@ -7,7 +7,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'graphql-scalars': resolve(__dirname, '../dist'),
+      'graphql-scalars': path.join(__dirname, '../dist'),
     },
     modules: ['node_modules', '../node_modules'],
   },

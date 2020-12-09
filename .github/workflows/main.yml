@@ -14,18 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node_version: [10, 12, 14]
+        node_version: [10, 12, 13]
     steps:
       - name: Checkout Master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
       - name: Use Node ${{matrix.node_version}}
         uses: actions/setup-node@master
         with:
           version: ${{ matrix.node_version }}
       - name: Install Dependencies using Yarn
         run: yarn install
-      - name: Lint
-        run: yarn lint
       - name: Test
         run: yarn test
 
@@ -34,11 +32,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
       - name: Use Node
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: '13.x'
       - name: Install Dependencies using Yarn
         run: yarn install
       - name: Build
